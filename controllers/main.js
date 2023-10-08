@@ -1,34 +1,35 @@
 const express = require('express')
+const Url = require('../models/Url'); // Use 'Url' instead of 'url'
 
 const getAllUrls = async(req, res) => {
-    res.send('Get all Urls')
+    const url = await Url.find()
+    res.json(url)
 }
 
 const getUrl = async(req, res) => {
-    res.send('Get single url')
-}
-
-const createShortUrl = async(req, res) => {
-    res.send('Short Url created')
+    const url = await Url.findOne()
+    res.json(url)
 }
 
 const editUrl = async(req, res) => {
-    res.send('Edit a url')
+    const { originalUrl, customName, shortUrl } = req.body
+    const { id } = req.params
+    const filter = {_id: id}
+    const url = await Url.findOneAndUpdate(filter, {originalUrl, customName, shortUrl}, {new: true})
+    res.json(url)
 }
 
 const deleteUrl= async(req, res) => {
-    res.send('Delete a url')
+    const { id } = req.params
+    const url = await Url.findOneAndRemove()
+    res.json(url)
 }
 
-const customShortUrl = async(req, res)  => {
-    res.send('custom name for short url')
-}
+
 
 module.exports = {
     getAllUrls,
     getUrl,
-    createShortUrl,
     editUrl,
     deleteUrl,
-    customShortUrl,
 }

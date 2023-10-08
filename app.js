@@ -4,7 +4,13 @@ const connectDB = require('./db/connect')
 const express = require('express');
 const app = express();
 
-app.use(express.json());
+const mainRouter = require('./routes/main')
+const urlRouter = require('./routes/urls')
+
+app.use(express.json())
+
+app.use('/api/v1/urls', mainRouter)
+app.use('/api/v1', urlRouter)
 
 const port = process.env.PORT || 3000;
 
