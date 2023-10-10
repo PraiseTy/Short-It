@@ -5,6 +5,8 @@ router = express.Router()
 
 
 router.route('/').get(getAllUrls)
-router.route('/:id').get(getUrl).put(editUrl).delete(deleteUrl)
+router.route('/:id').get(getUrl)
+router.route('/:id').put(editUrl)
+router.route('/:id').delete(deleteUrl)
 
 module.exports = router
