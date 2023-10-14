@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const statusCodes = require('http-status-code');
+const { HTTP_ERRORS } = require('../constant');
 
 const validateUrl = [
   body('originalUrl')
@@ -11,7 +11,7 @@ const validateUrlMiddleware = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(HTTP_ERRORS.BAD_REQUEST).json({ errors: errors.array() });
   }
   console.log('Validation successful');
   next();
