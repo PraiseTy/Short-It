@@ -24,7 +24,7 @@ const createShortUrl = async (req, res) => {
     }
     const existingLongUrl = await Url.findOne({ originalUrl });
     if (existingLongUrl) {
-      res.status(200).json({ shortUrl: shortUrls });
+      return res.status(200).json({ shortUrl: shortUrls });
     }
     const url = await Url.create({
       ...req.body,
