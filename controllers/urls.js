@@ -1,5 +1,6 @@
 const Url = require('../models/Url');
 const generateRandomString = require('../middleware/randomString');
+const BASEURL = require('../constant');
 
 const createShortUrl = async (req, res) => {
   const { customName, originalUrl } = req.body;
@@ -8,14 +9,14 @@ const createShortUrl = async (req, res) => {
   try {
     if (customName) {
       const customNameWithDashes = customName.split(' ').join('-');
-      shortUrls = `https://shortit/${customNameWithDashes}`;
+      shortUrls = `${BASEURL}/${customNameWithDashes}`;
       const existingCustomName = await Url.findOne({ customName: customNameWithDashes });
       if (existingCustomName) {
         return res.status(400).json({ errors: 'Custom name already exists' });
       }
     } else {
       const randomString = generateRandomString(5);
-      shortUrls = `https://shortit/${randomString}`;
+      shortUrls = `${BASEURL}/${randomString}`;
     }
 
     const existingRandomString = await Url.findOne({ shortUrl: shortUrls });
