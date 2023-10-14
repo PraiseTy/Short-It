@@ -1,6 +1,3 @@
-const express = require('express');
-const { validationResult } = require('express-validator');
-const statusCodes = require('http-status-code');
 const Url = require('../models/Url');
 const generateRandomString = require('../middleware/randomString');
 
