@@ -25,14 +25,14 @@ const createShortUrl = async (req, res) => {
     }
     const existingLongUrl = await Url.findOne({ originalUrl });
     if (existingLongUrl) {
-      return res.status(HTTP_ERRORS.OK).json({ shortUrl: shortUrls });
+      return res.status(HTTP_ERRORS.OK).json({ shortUrl: shortUrls, });
     }
     const url = await Url.create({
       ...req.body,
       shortUrl: shortUrls,
       customName
     });
-    res.status(HTTP_ERRORS.OK).json(url);
+    res.status(HTTP_ERRORS.OK).json({ message: 'Url shortened succesfully', data: { shortUrl: shortUrls } });
   } catch (error) {
     console.error(error);
     res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error. Please try again later.' });
