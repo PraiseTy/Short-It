@@ -32,7 +32,7 @@ const createShortUrl = async (req, res) => {
       shortUrl: shortUrls,
       customName
     });
-    return res.status(HTTP_ERRORS.OK).json({ message: 'Url shortened succesfully', data: { shortUrl: shortUrls } });
+    return res.status(HTTP_ERRORS.CREATED).json({ message: 'Url shortened succesfully', data: { shortUrl: shortUrls } });
   } catch (error) {
     console.error(error);
     res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error. Please try again later.' });
