@@ -7,7 +7,9 @@ const getAllUrls = async (req, res) => {
     const url = await Url.find();
     res.json(url);
   } catch (error) {
-    res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Something went wrong. Try again' });
+    res
+      .status(HTTP_ERRORS.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Something went wrong. Try again' });
   }
 };
 
@@ -15,9 +17,12 @@ const getUrl = async (req, res) => {
   try {
     const { id: urlId } = req.params;
     const url = await Url.findOne({ _id: urlId });
+    if (!url) {
+      return res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
+    }
     res.json(url);
   } catch (error) {
-    res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
+    res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong. Try Again' });
   }
 };
 
