@@ -4,7 +4,7 @@ const { HTTP_ERRORS } = require('../constant');
 
 const getAllUrls = async (req, res) => {
   try {
-    const url = await Url.find({});
+    const url = await Url.find();
     res.json(url);
   } catch (error) {
     res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Something went wrong. Try again' });
