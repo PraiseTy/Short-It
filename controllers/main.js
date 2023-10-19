@@ -22,7 +22,9 @@ const getUrl = async (req, res) => {
     }
     res.json(url);
   } catch (error) {
-    res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong. Try Again' });
+    res
+      .status(HTTP_ERRORS.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Something went wrong. Try Again' });
   }
 };
 
@@ -40,8 +42,20 @@ const editUrl = async (req, res) => {
 
 const deleteUrl = async (req, res) => {
   const { id } = req.params;
-  const url = await Url.findOneAndRemove();
-  res.json(url);
+
+  try {
+    const url = await Url.findOneAndRemove({ _id: id });
+
+    if (!url) {
+      return res
+        .status(HTTP_ERRORS.NOT_FOUND)
+        .json({ error: `No url found with id ${id}. Try again` });
+    }
+
+    res.json({ message: 'Url deleted successfully', data: { id, customName: url.customName, originalUrl: url.originalUrl, shortUrl: url.shortUrl, createdAt: url.createdAt } });
+  } catch (error) {
+    res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong.Try again' });
+  }
 };
 
 module.exports = {
