@@ -42,8 +42,7 @@ const editUrl = async (req, res) => {
 
     const url = await Url.findOneAndUpdate(
       filter,
-      { customName, shortUrl: shortUrls },
-      { new: true, runValidators: true }
+      { customName, shortUrl: shortUrls, originalUrl },
     );
 
     if (!originalUrl) {
@@ -55,8 +54,8 @@ const editUrl = async (req, res) => {
     });
   } catch (error) {
     res
-      .status(HTTP_ERRORS.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Something went wrong. Try again' });
+      .status(HTTP_ERRORS.NOT_FOUND)
+      .json({ error: 'Url cannot be found. Try Again' });
   }
 };
 
