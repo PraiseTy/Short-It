@@ -34,12 +34,18 @@ const editUrl = async (req, res) => {
   const filter = { _id: id };
   let shortUrls;
   try {
+    const url = await Url.findOne({ _id: id });
+
+    if (!url) {
+      return res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
+    }
+
     if (customName) {
       const customNameWithDashes = customName.split(' ').join('-');
       shortUrls = `${BASEURL}/${customNameWithDashes}`;
     }
 
-    const url = await Url.findOneAndUpdate(filter, {
+    const updatedUrl = await Url.findOneAndUpdate(filter, {
       customName,
       shortUrl: shortUrls,
       originalUrl
@@ -47,10 +53,10 @@ const editUrl = async (req, res) => {
 
     res.status(HTTP_ERRORS.OK).json({
       message: 'Url updated successfully',
-      data: { id, customName, originalUrl, shortUrl: shortUrls, createdAt: url.createdAt }
+      data: { id, customName, originalUrl, shortUrl: shortUrls, createdAt: updatedUrl.createdAt }
     });
   } catch (error) {
-    return res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
+    return res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong. Try Again' });
   }
 };
 
