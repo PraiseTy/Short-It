@@ -33,29 +33,24 @@ const editUrl = async (req, res) => {
   const { id } = req.params;
   const filter = { _id: id };
   let shortUrls;
-
   try {
     if (customName) {
       const customNameWithDashes = customName.split(' ').join('-');
       shortUrls = `${BASEURL}/${customNameWithDashes}`;
     }
 
-    const url = await Url.findOneAndUpdate(
-      filter,
-      { customName, shortUrl: shortUrls, originalUrl },
-    );
+    const url = await Url.findOneAndUpdate(filter, {
+      customName,
+      shortUrl: shortUrls,
+      originalUrl
+    });
 
-    if (!originalUrl) {
-      return res.status(HTTP_ERRORS.OK).json(url);
-    }
     res.status(HTTP_ERRORS.OK).json({
       message: 'Url updated successfully',
       data: { id, customName, originalUrl, shortUrl: shortUrls, createdAt: url.createdAt }
     });
   } catch (error) {
-    res
-      .status(HTTP_ERRORS.NOT_FOUND)
-      .json({ error: 'Url cannot be found. Try Again' });
+    return res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
   }
 };
 
