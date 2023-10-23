@@ -5,9 +5,9 @@ const { validateUrlMiddleware } = require('../middleware/validation');
 
 router = express.Router();
 
-router.route('/').get(getAllUrls);
-router.route('/:id').get(getUrl);
-router.route('/:id').put(validateEditUrls, validateUrlMiddleware, editUrl);
-router.route('/:id').delete(deleteUrl);
+router.get('/', getAllUrls);
+router.get('/:id', getUrl);
+router.put('/:id', validateEditUrls, validateUrlMiddleware, editUrl);
+router.delete('/:id', deleteUrl);
 
 module.exports = router;
