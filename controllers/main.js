@@ -1,6 +1,6 @@
 const express = require('express');
 const Url = require('../models/Url');
-const { HTTP_ERRORS } = require('../constant');
+const { HTTP_ERRORS, BASEURL } = require('../constant');
 
 const getAllUrls = async (req, res) => {
   try {
@@ -29,15 +29,35 @@ const getUrl = async (req, res) => {
 };
 
 const editUrl = async (req, res) => {
-  const { originalUrl, customName, shortUrl } = req.body;
+  const { originalUrl, customName } = req.body;
   const { id } = req.params;
   const filter = { _id: id };
-  const url = await Url.findOneAndUpdate(
-    filter,
-    { originalUrl, customName, shortUrl },
-    { new: true }
-  );
-  res.json(url);
+  let shortUrls;
+  try {
+    const url = await Url.findOne({ _id: id });
+
+    if (!url) {
+      return res.status(HTTP_ERRORS.NOT_FOUND).json({ error: 'Url cannot be found. Try Again' });
+    }
+
+    if (customName) {
+      const customNameWithDashes = customName.split(' ').join('-');
+      shortUrls = `${BASEURL}/${customNameWithDashes}`;
+    }
+
+    const updatedUrl = await Url.findOneAndUpdate(filter, {
+      customName,
+      shortUrl: shortUrls,
+      originalUrl
+    });
+
+    res.status(HTTP_ERRORS.OK).json({
+      message: 'Url updated successfully',
+      data: { id, customName, originalUrl, shortUrl: shortUrls, createdAt: updatedUrl.createdAt }
+    });
+  } catch (error) {
+    return res.status(HTTP_ERRORS.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong. Try Again' });
+  }
 };
 
 const deleteUrl = async (req, res) => {

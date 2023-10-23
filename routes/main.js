@@ -1,12 +1,13 @@
-const express = require('express')
-const { getAllUrls, getUrl, editUrl, deleteUrl } = require('../controllers/main')
+const express = require('express');
+const { getAllUrls, getUrl, editUrl, deleteUrl } = require('../controllers/main');
+const { validateEditUrls } = require('../middleware/validateEditUrl');
+const { validateUrlMiddleware } = require('../middleware/validation');
 
-router = express.Router()
+router = express.Router();
 
+router.get('/', getAllUrls);
+router.get('/:id', getUrl);
+router.put('/:id', validateEditUrls, validateUrlMiddleware, editUrl);
+router.delete('/:id', deleteUrl);
 
-router.route('/').get(getAllUrls)
-router.route('/:id').get(getUrl)
-router.route('/:id').put(editUrl)
-router.route('/:id').delete(deleteUrl)
-
-module.exports = router
+module.exports = router;
